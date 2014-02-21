@@ -28,7 +28,7 @@ Node.js library for the [Gearman](http://gearman.org/) distributed job system wi
 * Node package published here: https://npmjs.org/package/gearmanode
 
 
-## Changelog
+## 更新日志
 See [version.js](https://github.com/veny/GearmaNode/tree/master/lib/gearmanode/version.js) for detailed changelog.
 
 
@@ -62,25 +62,25 @@ worker.addFunction('reverse', function (job) {
 });
 ```
 
-### TOC
+### 学习目录
 
-See [Geaman Manual](http://gearman.org/manual) to understand generic Gearman concepts.
-See [example](https://github.com/veny/GearmaNode/tree/master/example) folder for more detailed samples.
+查看[Geaman手册](http://gearman.org/manual)了解Gearman常用概念.
+查看[实例](https://github.com/veny/GearmaNode/tree/master/example) 目录了解更详细的例子.
 
-* [Client](#client)
- * [Submit job](#submit-job)
- * [Client events](#client-events)
-* [Worker](#worker)
- * [Register function](#register-function)
- * [Worker events](#worker-events)
-* [Job](#job)
- * [Job events](#job-events)
-* [Job server](#job-server)
- * [Job server events](#job-server-events)
-* [Multiple servers](#multiple-servers)
-* [Error handling](#error-handling)
-* [Configuration](#configuration)
- * [Logger](#logger)
+* [客户端](#client)
+ * [提交任务](#submit-job)
+ * [客户端事件](#client-events)
+* [工作程序](#worker)
+ * [注册函数](#register-function)
+ * [工作程序事件](#worker-events)
+* [任务](#job)
+ * [任务时间](#job-events)
+* [任务服务器](#job-server)
+ * [任务服务器事件](#job-server-events)
+* [多服务器](#multiple-servers)
+* [错误控制](#error-handling)
+* [配置](#configuration)
+ * [日志](#logger)
 
 ### 客户端
 *The client is responsible for creating a job to be run and sending it to a job server. The job server will find a suitable worker that can run the job and forwards the job on.*
@@ -112,7 +112,7 @@ client = gearmanode.client({servers: [{host: 'foo.com', port: 4731}, {host: 'bar
 client = gearmanode.client({servers: [{host: 'foo.com'}, {port: 4731}]});
 ```
 
-#### 提交工作
+#### 提交任务
 
 Client submits job to a Gearman server and futher processed by a worker via `client#submitJob(name, payload, options)`
 where `name` is name of registered function a worker is to execute, `payload` is data to be processed
@@ -147,7 +147,7 @@ job.on('complete', function() {
 
 A client object should be closed if no more needed to release all its associated resources and socket connections. See the sample above.
 
-#### 客户端时间
+#### 客户端事件
 * **socketConnect** - when a job server connected (physical connection is lazy opened by first data sending), has parameter **job server UID**
 * **socketDisconnect** - when connection to a job server terminated, has parameter **job server UID** and optional **Error** in case of an unexpected wrong termination
 * **socketError** - when a socket problem occurs (connection failure, broken pipe, connection terminated by other end, ...), has parameter **job server UID** and **Error**
@@ -156,7 +156,7 @@ A client object should be closed if no more needed to release all its associated
 * **error** - when an unrecoverable error occured (e.g. illegal client's state, malformed data ...), has parameter **Error**
 
 
-### 工作者
+### 工作程序
 *The worker performs the work requested by the client and sends a response to the client through the job server.*
 -- Gearman Documentation --
 
@@ -200,7 +200,7 @@ A registered function can be unregistered via `worker#removeFunction`.
 Call `Worker#resetAbilities` to notify the server(s) that the worker is no longer able to do any functions it previously registered.
 
 
-#### 工作端事件
+#### 工作程序事件
 * **socketConnect** - when a job server connected (physical connection is lazy opened by first data sending), has parameter **job server UID**
 * **socketDisconnect** - when connection to a job server terminated, has parameter **job server UID** and optional **Error** in case of an unexpected wrong termination
 * **socketError** - when a socket problem occurs (connection failure, broken pipe, connection terminated by other end, ...), has parameter **job server UID** and **Error**
@@ -209,7 +209,7 @@ Call `Worker#resetAbilities` to notify the server(s) that the worker is no longe
 * **error** - when a fatal error occurred while processing job (e.g. illegal worker's state, socket problem, ...) or job server encounters an error and needs to notify client, has parameter **Error**
 
 
-### 工作
+### 任务
 
 The `Job` object is an encapsulation of job's attributes and interface for next communication with job server.
 Additionally is the object en emitter of events corresponding to job's life cycle (see [Job events](#job-events)).
@@ -233,7 +233,7 @@ and methods
 * **reportException** - to indicate that the job failed with exception (deprecated, provided for backwards compatibility) [Worker]
 * **sendData** - send data before job completes [Worker]
 
-#### 工作事件
+#### 任务事件
 * **submited** - when job submited via a job server; server UID stored on the job [Client]
 * **created** - when response to one of the SUBMIT_JOB* packets arrived and job handle assigned [Client]
 * **status** - to update status information of a submitted jobs [Client]
@@ -249,7 +249,7 @@ and methods
 * **error** - when communication with job server failed [Client/Worker]
 
 
-### 工作服务器
+### 任务服务器
 Class `JobServer` represents an abstraction to Gearman job server (gearmand).
 Accessible job server(s) are stored in array `jobServer` on instance of Client/Worker.
 The class introduces following methods:
@@ -268,7 +268,7 @@ js.once('echo', function(resp) {
 js.echo('ping')
 ```
 
-#### 工作服务器事件
+#### 任务服务器事件
 * **echo** - when response to ECHO_REQ packet arrived, has parameter **data** which is opaque data echoed back in response
 * **option** - issued when an option for the connection in the job server was successfully set, has parameter **name** of the option that was set
 * **jobServerError** - whenever the job server encounters an error, has parameters **code**, **message**
