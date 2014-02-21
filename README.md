@@ -8,7 +8,7 @@
 Node.js library for the [Gearman](http://gearman.org/) distributed job system with support for multiple servers.
 
 
-## Features
+## 功能
 * fully implemented Gearman Protocol
  * @TODO (SET_CLIENT_ID, CAN_DO_TIMEOUT, GRAB_JOB_UNIQ, JOB_ASSIGN_UNIQ)
 * support for multiple job servers
@@ -21,7 +21,7 @@ Node.js library for the [Gearman](http://gearman.org/) distributed job system wi
 * in depth tested with gearman clients and workers written in other languages (Ruby, PHP, Java)
 
 
-## Installation
+## 安装
 
     > npm install gearmanode
 
@@ -32,9 +32,9 @@ Node.js library for the [Gearman](http://gearman.org/) distributed job system wi
 See [version.js](https://github.com/veny/GearmaNode/tree/master/lib/gearmanode/version.js) for detailed changelog.
 
 
-## Usage
+## 使用
 
-* **Client**
+* **客户端**
 
 ```javascript
 var gearmanode = require('gearmanode');
@@ -50,7 +50,7 @@ job.on('complete', function() {
 });
 ```
 
-* **Worker**
+* **工作端**
 
 ```javascript
 var gearmanode = require('gearmanode');
@@ -82,7 +82,7 @@ See [example](https://github.com/veny/GearmaNode/tree/master/example) folder for
 * [Configuration](#configuration)
  * [Logger](#logger)
 
-### Client
+### 客户端
 *The client is responsible for creating a job to be run and sending it to a job server. The job server will find a suitable worker that can run the job and forwards the job on.*
 -- Gearman Documentation --
 
@@ -112,7 +112,7 @@ client = gearmanode.client({servers: [{host: 'foo.com', port: 4731}, {host: 'bar
 client = gearmanode.client({servers: [{host: 'foo.com'}, {port: 4731}]});
 ```
 
-#### Submit job
+#### 提交工作
 
 Client submits job to a Gearman server and futher processed by a worker via `client#submitJob(name, payload, options)`
 where `name` is name of registered function a worker is to execute, `payload` is data to be processed
@@ -147,7 +147,7 @@ job.on('complete', function() {
 
 A client object should be closed if no more needed to release all its associated resources and socket connections. See the sample above.
 
-#### Client events
+#### 客户端时间
 * **socketConnect** - when a job server connected (physical connection is lazy opened by first data sending), has parameter **job server UID**
 * **socketDisconnect** - when connection to a job server terminated, has parameter **job server UID** and optional **Error** in case of an unexpected wrong termination
 * **socketError** - when a socket problem occurs (connection failure, broken pipe, connection terminated by other end, ...), has parameter **job server UID** and **Error**
@@ -156,7 +156,7 @@ A client object should be closed if no more needed to release all its associated
 * **error** - when an unrecoverable error occured (e.g. illegal client's state, malformed data ...), has parameter **Error**
 
 
-### Worker
+### 工作者
 *The worker performs the work requested by the client and sends a response to the client through the job server.*
 -- Gearman Documentation --
 
@@ -173,7 +173,7 @@ By default, the job server is expected on `localhost:4730`. Following options ca
  * **servers** [see Client](#client)
  * **withUnique** {boolean} flag whether a job will be grabbed with the client assigned unique ID @TODO
 
-#### Register function
+#### 注册函数
 
 A function the worker is able to perform can be registered via `worker#addFunction(name, callback, options)`
 where `name` is a symbolic name of the function, `callback` is a function to be run when a job will be received
@@ -200,7 +200,7 @@ A registered function can be unregistered via `worker#removeFunction`.
 Call `Worker#resetAbilities` to notify the server(s) that the worker is no longer able to do any functions it previously registered.
 
 
-#### Worker events
+#### 工作端事件
 * **socketConnect** - when a job server connected (physical connection is lazy opened by first data sending), has parameter **job server UID**
 * **socketDisconnect** - when connection to a job server terminated, has parameter **job server UID** and optional **Error** in case of an unexpected wrong termination
 * **socketError** - when a socket problem occurs (connection failure, broken pipe, connection terminated by other end, ...), has parameter **job server UID** and **Error**
@@ -209,7 +209,7 @@ Call `Worker#resetAbilities` to notify the server(s) that the worker is no longe
 * **error** - when a fatal error occurred while processing job (e.g. illegal worker's state, socket problem, ...) or job server encounters an error and needs to notify client, has parameter **Error**
 
 
-### Job
+### 工作
 
 The `Job` object is an encapsulation of job's attributes and interface for next communication with job server.
 Additionally is the object en emitter of events corresponding to job's life cycle (see [Job events](#job-events)).
@@ -233,7 +233,7 @@ and methods
 * **reportException** - to indicate that the job failed with exception (deprecated, provided for backwards compatibility) [Worker]
 * **sendData** - send data before job completes [Worker]
 
-#### Job events
+#### 工作事件
 * **submited** - when job submited via a job server; server UID stored on the job [Client]
 * **created** - when response to one of the SUBMIT_JOB* packets arrived and job handle assigned [Client]
 * **status** - to update status information of a submitted jobs [Client]
@@ -249,7 +249,7 @@ and methods
 * **error** - when communication with job server failed [Client/Worker]
 
 
-### Job server
+### 工作服务器
 Class `JobServer` represents an abstraction to Gearman job server (gearmand).
 Accessible job server(s) are stored in array `jobServer` on instance of Client/Worker.
 The class introduces following methods:
@@ -268,13 +268,13 @@ js.once('echo', function(resp) {
 js.echo('ping')
 ```
 
-#### Job server events
+#### 工作服务器事件
 * **echo** - when response to ECHO_REQ packet arrived, has parameter **data** which is opaque data echoed back in response
 * **option** - issued when an option for the connection in the job server was successfully set, has parameter **name** of the option that was set
 * **jobServerError** - whenever the job server encounters an error, has parameters **code**, **message**
 
 
-### Multiple servers
+### 多服务器
 Many of Gearman job servers can be started for both high-availability and load balancing.
 
 [Client](#client) is able to communicate with multiple servers with one of the following load balancing strategy:
@@ -292,20 +292,20 @@ client = gearmanode.client({ servers: [{host: 'foo.com'}, {port: 4731}], loadBal
 
 [Worker](#worker) can be initialized with multiple servers in order to register a function on each of them.
 
-### Error handling
+### 错误控制
 Although exceptions are supported in JavaScript and they can be used to communicate an error, due to asynchronous concept of Node.js it can be a bad idea.
 According to Node.js best practices following error handling is introduced in GearmaNode.
 
-#### Synchronous errors
+#### 同步错误
 A synchronous code returns an `Error` object if something goes wrong. This happens mostly in input value validation.
 
-#### Asynchronous errors
+#### 异步错误
 In asynchronous code an error event will be emitted via `EventEmitter` on corresponding object if something goes wrong.
 This happens mostly by network communication failure or if a gearman service fails.
 
-### Configuration
+### 配置
 
-#### Logger
+#### 日志
 `Winston` library is used for logging. See the [project page](https://github.com/flatiron/winston) for details.
 You can configure the logger in this way:
 
@@ -314,12 +314,12 @@ gearmanode.Client.logger.transports.console.level = 'info';
 ````
 
 
-## Class diagram
+## 类图
 
 [![](https://raw.github.com/veny/GearmaNode/master/ooad/Classes.png)](https://raw.github.com/veny/GearmaNode/master/ooad/Classes.png)
 
 
-## Tests
+## 测试
 
     > cd /path/to/repository
     > mocha
@@ -330,13 +330,13 @@ Make sure before starting the tests:
 * `mocha` test framework is installed
 
 
-## Author
+## 作者
 
 * vaclav.sykora@gmail.com
 * https://plus.google.com/115674031373998885915
 
 
-## License
+## 许可证
 
 * [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 * see [LICENSE](https://github.com/veny/GearmaNode/tree/master/LICENSE) file for more details
